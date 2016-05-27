@@ -1,4 +1,5 @@
 import CCUDD
+import CCUDDAdditional
 
 public struct CUDDManager {
     
@@ -32,10 +33,23 @@ public class CUDDNode: Equatable {
     deinit {
         Cudd_RecursiveDeref(manager.manager, node)
     }
+    
+    public func negate() -> CUDDNode {
+        node = Cudd_Not_(node)
+        return self
+    }
 }
 
 public func ==(lhs: CUDDNode, rhs: CUDDNode) -> Bool {
     return lhs.node == rhs.node
+}
+
+public func &(lhs: CUDDNode, rhs: CUDDNode) -> CUDDNode {
+    //DdManager *mgr = checkSameManager(other);
+    let mgr = lhs.manager.manager
+    let result = Cudd_bddAnd(mgr, lhs.node, rhs.node)
+    //checkReturnValue(result);
+    return CUDDNode(manager: lhs.manager, node: result!)
 }
 
 public func &=(lhs: inout CUDDNode, rhs: CUDDNode) {
@@ -46,4 +60,8 @@ public func &=(lhs: inout CUDDNode, rhs: CUDDNode) {
     Cudd_Ref(result)
     Cudd_RecursiveDeref(mgr, lhs.node)
     lhs.node = result!
+}
+
+public prefix func !(operand: CUDDNode) -> CUDDNode {
+    return CUDDNode(manager: operand.manager, node: Cudd_Not_(operand.node))
 }
