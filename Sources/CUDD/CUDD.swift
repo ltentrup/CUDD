@@ -73,6 +73,10 @@ public class CUDDNode: Equatable, CustomStringConvertible {
         //checkReturnValue(result);
         return CUDDNode(manager: manager, node: result!)
     }
+    
+    public func PrintMinterm() {
+        Cudd_PrintMinterm(manager.manager, node)
+    }
 }
 
 public func ==(lhs: CUDDNode, rhs: CUDDNode) -> Bool {
