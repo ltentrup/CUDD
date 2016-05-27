@@ -46,6 +46,10 @@ public class CUDDNode: Equatable, CustomStringConvertible {
         return "\(self.node)"
     }
     
+    public func copy() -> CUDDNode {
+        return CUDDNode(manager: manager, node: node)
+    }
+    
     public func negate() -> CUDDNode {
         node = Cudd_Not_(node)
         return self
