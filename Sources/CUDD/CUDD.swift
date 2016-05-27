@@ -14,7 +14,7 @@ public struct CUDDManager {
     }
     
     public func zero() -> CUDDNode {
-        return CUDDNode(manager: self, node: Cudd_ReadZero(manager))
+        return CUDDNode(manager: self, node: Cudd_Not_(Cudd_ReadOne(manager)))
     }
     
     public func newVar() -> CUDDNode {

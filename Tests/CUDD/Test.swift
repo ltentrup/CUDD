@@ -17,7 +17,8 @@ class CUDDTest: XCTestCase {
         let manager = CUDDManager()
         let a = manager.one()
         let b = manager.zero()
-        XCTAssertNotEqual(a, b, "Constant one functions should be not equal to constant zero function")
+        XCTAssertNotEqual(a, b, "true != false")
+        XCTAssertEqual(a & b, b, "true & false == false")
     }
     
     func testConjunction() {
