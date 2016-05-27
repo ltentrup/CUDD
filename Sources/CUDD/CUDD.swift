@@ -65,3 +65,12 @@ public func &=(lhs: inout CUDDNode, rhs: CUDDNode) {
 public prefix func !(operand: CUDDNode) -> CUDDNode {
     return CUDDNode(manager: operand.manager, node: Cudd_Not_(operand.node))
 }
+
+infix operator <-> {}
+public func <->(lhs: CUDDNode, rhs: CUDDNode) -> CUDDNode {
+    //DdManager *mgr = checkSameManager(other);
+    let mgr = lhs.manager.manager
+    let result = Cudd_bddXnor(mgr, lhs.node, rhs.node)
+    //checkReturnValue(result);
+    return CUDDNode(manager: lhs.manager, node: result!)
+}

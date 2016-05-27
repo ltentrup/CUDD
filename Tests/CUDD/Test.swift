@@ -44,4 +44,11 @@ class CUDDTest: XCTestCase {
         XCTAssertNotEqual(a, !a, "a != !a")
         XCTAssertEqual(a, !(!a), "a == !!a")
     }
+    
+    func testXnor() {
+        let manager = CUDDManager()
+        let a = manager.newVar()
+        let b = manager.newVar()
+        XCTAssertEqual(a <-> b, b <-> a, "(a <-> b) == (b <-> a)")
+    }
 }
