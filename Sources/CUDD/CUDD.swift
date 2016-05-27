@@ -20,6 +20,14 @@ public struct CUDDManager {
     public func newVar() -> CUDDNode {
         return CUDDNode(manager: self, node: Cudd_bddNewVar(manager))
     }
+    
+    public func setVarMap(from: [CUDDNode], to: [CUDDNode]) {
+        precondition(from.count == to.count)
+        var x: [OpaquePointer?] = from.map({ node in node.node })
+        var y: [OpaquePointer?] = to.map({ node in node.node })
+        let res = Cudd_SetVarMap(manager, &x, &y, Int32(x.count))
+        assert(res == 1)
+    }
 }
 
 public class CUDDNode: Equatable, CustomStringConvertible {
@@ -41,6 +49,29 @@ public class CUDDNode: Equatable, CustomStringConvertible {
     public func negate() -> CUDDNode {
         node = Cudd_Not_(node)
         return self
+    }
+    
+    public func ExistAbstract(cube: CUDDNode) -> CUDDNode {
+        //DdManager *mgr = checkSameManager(other);
+        let mgr = manager.manager
+        let result = Cudd_bddExistAbstract(mgr, node, cube.node)
+        //checkReturnValue(result);
+        return CUDDNode(manager: manager, node: result!)
+    }
+    
+    public func UnivAbstract(cube: CUDDNode) -> CUDDNode {
+        //DdManager *mgr = checkSameManager(other);
+        let mgr = manager.manager
+        let result = Cudd_bddUnivAbstract(mgr, node, cube.node)
+        //checkReturnValue(result);
+        return CUDDNode(manager: manager, node: result!)
+    }
+    
+    public func varMap() -> CUDDNode {
+        let mgr = manager.manager
+        let result = Cudd_bddVarMap(mgr, node)
+        //checkReturnValue(result);
+        return CUDDNode(manager: manager, node: result!)
     }
 }
 
@@ -64,6 +95,14 @@ public func &=(lhs: inout CUDDNode, rhs: CUDDNode) {
     Cudd_Ref(result)
     Cudd_RecursiveDeref(mgr, lhs.node)
     lhs.node = result!
+}
+
+public func |(lhs: CUDDNode, rhs: CUDDNode) -> CUDDNode {
+    //DdManager *mgr = checkSameManager(other);
+    let mgr = lhs.manager.manager
+    let result = Cudd_bddOr(mgr, lhs.node, rhs.node)
+    //checkReturnValue(result);
+    return CUDDNode(manager: lhs.manager, node: result!)
 }
 
 public prefix func !(operand: CUDDNode) -> CUDDNode {

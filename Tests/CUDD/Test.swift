@@ -52,4 +52,31 @@ class CUDDTest: XCTestCase {
         let b = manager.newVar()
         XCTAssertEqual(a <-> b, b <-> a, "(a <-> b) == (b <-> a)")
     }
+    
+    func testAbstraction() {
+        let manager = CUDDManager()
+        let a = manager.newVar()
+        let b = manager.newVar()
+        let function = a & b
+        XCTAssertEqual(function.ExistAbstract(cube: a & b), manager.one(), "∃ a, b. (a & b) == true")
+        XCTAssertEqual(function.UnivAbstract(cube: a), manager.zero(), "∀ a. (a & b) == false")
+    }
+    
+    func testVarMapping() {
+        let manager = CUDDManager()
+        let a = manager.newVar()
+        let b = manager.newVar()
+        let c = manager.newVar()
+        let d = manager.newVar()
+        manager.setVarMap(from: [a, b, c, d], to: [c, d, a, b])
+        
+        let function = a & b
+        let function2 = c & d
+        XCTAssertNotEqual(function, function2, "(a & b) != (c & d)")
+        let primedFunction = function.varMap()
+        XCTAssertNotEqual(primedFunction, function, "(a & b)[a<->c,b<->d] != (a & b)")
+        XCTAssertEqual(primedFunction, function2, "(a & b)[a<->c,b<->d] == (c & d)")
+        let doublePrimedFunction = primedFunction.varMap()
+        XCTAssertEqual(doublePrimedFunction, function, "(a & b)[a<->c,b<->d][a<->c,b<->d] == (a & b)")
+    }
 }
