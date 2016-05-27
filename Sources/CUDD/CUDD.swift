@@ -22,7 +22,7 @@ public struct CUDDManager {
     }
 }
 
-public class CUDDNode: Equatable {
+public class CUDDNode: Equatable, CustomStringConvertible {
     let manager: CUDDManager
     var node: OpaquePointer
     private init(manager: CUDDManager, node: OpaquePointer) {
@@ -32,6 +32,10 @@ public class CUDDNode: Equatable {
     }
     deinit {
         Cudd_RecursiveDeref(manager.manager, node)
+    }
+    
+    public var description: String {
+        return "\(self.node)"
     }
     
     public func negate() -> CUDDNode {
