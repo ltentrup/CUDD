@@ -141,4 +141,22 @@ class CUDDTest: XCTestCase {
         XCTAssertTrue(function <= !a)
         XCTAssertTrue(!a >= function)
     }
+    
+    func testCoFactor() {
+        let manager = CUDDManager()
+        let a = manager.newVar()
+        let b = manager.newVar()
+        // f: a -> b
+        let function = (!a | b)
+        XCTAssertEqual(function.coFactor(withRespectTo: b), manager.one())
+        XCTAssertEqual(function.coFactor(withRespectTo: !b), !a)
+    }
+    
+    func testRestrict() {
+        let manager = CUDDManager()
+        let a = manager.newVar()
+        let b = manager.newVar()
+        let function = a | b
+        XCTAssertEqual(function.restrict(with: !b), a)
+    }
 }

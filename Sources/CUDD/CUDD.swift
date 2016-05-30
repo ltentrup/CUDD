@@ -113,6 +113,22 @@ public class CUDDNode: Equatable, CustomStringConvertible {
         return CUDDNode(manager: manager, node: result!)
     }
     
+    public func coFactor(withRespectTo other: CUDDNode) -> CUDDNode {
+        //DdManager *mgr = checkSameManager(other);
+        let mgr = manager.manager
+        let result = Cudd_Cofactor(mgr, node, other.node)
+        //checkReturnValue(result);
+        return CUDDNode(manager: manager, node: result!)
+    }
+    
+    public func restrict(with: CUDDNode) -> CUDDNode {
+        //DdManager *mgr = checkSameManager(other);
+        let mgr = manager.manager
+        let result = Cudd_bddRestrict(mgr, node, with.node)
+        //checkReturnValue(result);
+        return CUDDNode(manager: manager, node: result!)
+    }
+    
     public func varMap() -> CUDDNode {
         let mgr = manager.manager
         let result = Cudd_bddVarMap(mgr, node)
