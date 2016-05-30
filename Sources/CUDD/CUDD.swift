@@ -48,7 +48,7 @@ public struct CUDDManager {
     }
     
     public func printInfo() {
-        Cudd_PrintInfo(manager, __stdoutp)
+        Cudd_PrintInfo(manager, stdout)
     }
 }
 
