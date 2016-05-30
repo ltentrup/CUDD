@@ -102,7 +102,7 @@ class CUDDTest: XCTestCase {
         b.setNextState()
         XCTAssertTrue(c.isNextState())
         
-        a.setPair(nextStep: b)
+        a.setPair(nextState: b)
         
         XCTAssertFalse(c.isPrimaryInput())
         c.setPrimaryInput()

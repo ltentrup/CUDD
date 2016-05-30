@@ -134,8 +134,8 @@ public class CUDDNode: Equatable, CustomStringConvertible {
         return Cudd_bddIsPiVar(manager.manager, self.index()) == 1
     }
     
-    public func setPair(nextStep: CUDDNode) {
-        Cudd_bddSetPairIndex(manager.manager, self.index(), nextStep.index())
+    public func setPair(nextState: CUDDNode) {
+        Cudd_bddSetPairIndex(manager.manager, self.index(), nextState.index())
     }
 }
 
