@@ -46,6 +46,10 @@ public struct CUDDManager {
     public func AutodynEnable(reorderingAlgorithm: CUDDReordering) {
         Cudd_AutodynEnable(manager, reorderingAlgorithm.cRepresentation)	
     }
+    
+    public func printInfo() {
+        Cudd_PrintInfo(manager, __stdoutp)
+    }
 }
 
 public class CUDDNode: Equatable, CustomStringConvertible {
