@@ -134,6 +134,10 @@ public class CUDDNode: Equatable, CustomStringConvertible {
         return Int(Cudd_NodeReadIndex(node))
     }
     
+    public func dagSize() -> Int {
+        return Int(Cudd_DagSize(node))
+    }
+    
     public func setNextState() {
         Cudd_bddSetNsVar(manager.manager, self.index())
     }
