@@ -3,12 +3,15 @@ import CCUDD
 
 public enum CUDDReordering {
     case Same
+    case GroupSift
     case LazySift
     
     var cRepresentation: Cudd_ReorderingType {
         switch self {
         case .Same:
             return CUDD_REORDER_SAME
+        case .GroupSift:
+            return CUDD_REORDER_GROUP_SIFT
         case .LazySift:
             return CUDD_REORDER_LAZY_SIFT
         }
