@@ -131,4 +131,14 @@ class CUDDTest: XCTestCase {
         c.setPrimaryInput()
         XCTAssertTrue(c.isPrimaryInput())
     }
+    
+    func testLessOrEqual() {
+        let manager = CUDDManager()
+        let a = manager.newVar()
+        let b = manager.newVar()
+        XCTAssertFalse(a <= b)
+        let function = !a & !b
+        XCTAssertTrue(function <= !a)
+        XCTAssertTrue(!a >= function)
+    }
 }

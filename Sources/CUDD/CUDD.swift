@@ -198,3 +198,17 @@ public func <->(lhs: CUDDNode, rhs: CUDDNode) -> CUDDNode {
     //checkReturnValue(result);
     return CUDDNode(manager: lhs.manager, node: result!)
 }
+
+public func <=(lhs: CUDDNode, rhs: CUDDNode) -> Bool {
+    //DdManager *mgr = checkSameManager(other);
+    let mgr = lhs.manager.manager
+    let result = Cudd_bddLeq(mgr, lhs.node, rhs.node)
+    return result == 1
+}
+
+public func >=(lhs: CUDDNode, rhs: CUDDNode) -> Bool {
+    //DdManager *mgr = checkSameManager(other);
+    let mgr = lhs.manager.manager
+    let result = Cudd_bddLeq(mgr, rhs.node, lhs.node)
+    return result == 1
+}
