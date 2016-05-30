@@ -1,5 +1,5 @@
 import CCUDD
-import CCUDDAdditional
+//import CCUDDAdditional
 
 public enum CUDDReordering {
     case Same
@@ -20,7 +20,7 @@ public struct CUDDManager {
     let manager: OpaquePointer
     
     public init() {
-        manager = Cudd_Init(0, 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0)
+        manager = Cudd_Init(0, 0, UInt32(CUDD_UNIQUE_SLOTS), UInt32(CUDD_CACHE_SLOTS), 0)
     }
     
     public func one() -> CUDDNode {
@@ -28,7 +28,7 @@ public struct CUDDManager {
     }
     
     public func zero() -> CUDDNode {
-        return CUDDNode(manager: self, node: Cudd_Not_(Cudd_ReadOne(manager)))
+        return CUDDNode(manager: self, node: Cudd_Not(Cudd_ReadOne(manager)))
     }
     
     public func newVar() -> CUDDNode {
@@ -73,7 +73,7 @@ public class CUDDNode: Equatable, CustomStringConvertible {
     }
     
     public func negate() -> CUDDNode {
-        node = Cudd_Not_(node)
+        node = Cudd_Not(node)
         return self
     }
     
@@ -191,7 +191,7 @@ public func |(lhs: CUDDNode, rhs: CUDDNode) -> CUDDNode {
 }
 
 public prefix func !(operand: CUDDNode) -> CUDDNode {
-    return CUDDNode(manager: operand.manager, node: Cudd_Not_(operand.node))
+    return CUDDNode(manager: operand.manager, node: Cudd_Not(operand.node))
 }
 
 infix operator <-> {}
