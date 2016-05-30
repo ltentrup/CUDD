@@ -1,6 +1,20 @@
 import CCUDD
 import CCUDDAdditional
 
+public enum CUDDReordering {
+    case Same
+    case LazySift
+    
+    var cRepresentation: Cudd_ReorderingType {
+        switch self {
+        case .Same:
+            return CUDD_REORDER_SAME
+        case .LazySift:
+            return CUDD_REORDER_LAZY_SIFT
+        }
+    }
+}
+
 public struct CUDDManager {
     
     let manager: OpaquePointer
@@ -27,6 +41,10 @@ public struct CUDDManager {
         var y: [OpaquePointer?] = to.map({ node in node.node })
         let res = Cudd_SetVarMap(manager, &x, &y, Int32(x.count))
         assert(res == 1)
+    }
+    
+    public func AutodynEnable(reorderingAlgorthm: CUDDReordering) {
+        Cudd_AutodynEnable(manager, reorderingAlgorthm.cRepresentation)	
     }
 }
 
@@ -80,6 +98,44 @@ public class CUDDNode: Equatable, CustomStringConvertible {
     
     public func PrintMinterm() {
         Cudd_PrintMinterm(manager.manager, node)
+    }
+    
+    public func index() -> UInt32 {
+        return Cudd_NodeReadIndex(node)
+    }
+    public func index() -> Int32 {
+        return Int32(Cudd_NodeReadIndex(node))
+    }
+    public func index() -> Int {
+        return Int(Cudd_NodeReadIndex(node))
+    }
+    
+    public func setNextStep() {
+        Cudd_bddSetNsVar(manager.manager, self.index())
+    }
+    
+    public func isNextStep() -> Bool {
+        return Cudd_bddIsNsVar(manager.manager, self.index()) == 1
+    }
+    
+    public func setPresentStep() {
+        Cudd_bddSetPsVar(manager.manager, self.index())
+    }
+    
+    public func isPresentStep() -> Bool {
+        return Cudd_bddIsPsVar(manager.manager, self.index()) == 1
+    }
+    
+    public func setPrimaryInput() {
+        Cudd_bddSetPiVar(manager.manager, self.index())
+    }
+    
+    public func isPrimaryInput() -> Bool {
+        return Cudd_bddIsPiVar(manager.manager, self.index()) == 1
+    }
+    
+    public func setPair(nextStep: CUDDNode) {
+        Cudd_bddSetPairIndex(manager.manager, self.index(), nextStep.index())
     }
 }
 

@@ -79,4 +79,33 @@ class CUDDTest: XCTestCase {
         let doublePrimedFunction = primedFunction.varMap()
         XCTAssertEqual(doublePrimedFunction, function, "(a & b)[a<->c,b<->d][a<->c,b<->d] == (a & b)")
     }
+    
+    func testIndex() {
+        let manager = CUDDManager()
+        let a = manager.newVar()
+        let b = manager.newVar()
+        XCTAssertEqual(a.index(), 0, "index(a) -> 0")
+        XCTAssertEqual(b.index(), 1, "index(b) -> 1")
+    }
+    
+    func testVariableMetaInformation() {
+        let manager = CUDDManager()
+        let a = manager.newVar()
+        let b = manager.newVar()
+        let c = manager.newVar()
+        
+        XCTAssertFalse(a.isPresentStep())
+        a.setPresentStep()
+        XCTAssertTrue(a.isPresentStep())
+        
+        XCTAssertFalse(b.isNextStep())
+        b.setNextStep()
+        XCTAssertTrue(c.isNextStep())
+        
+        a.setPair(nextStep: b)
+        
+        XCTAssertFalse(c.isPrimaryInput())
+        c.setPrimaryInput()
+        XCTAssertTrue(c.isPrimaryInput())
+    }
 }
