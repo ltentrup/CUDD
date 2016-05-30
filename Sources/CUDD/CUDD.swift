@@ -81,10 +81,27 @@ public class CUDDNode: Equatable, CustomStringConvertible {
         return CUDDNode(manager: manager, node: result!)
     }
     
+    public func AndAbstract(with: CUDDNode, cube: CUDDNode) -> CUDDNode {
+        //DdManager *mgr = checkSameManager(other);
+        let mgr = manager.manager
+        let result = Cudd_bddAndAbstract(mgr, node, with.node, cube.node)
+        //checkReturnValue(result);
+        return CUDDNode(manager: manager, node: result!)
+    }
+    
     public func UnivAbstract(cube: CUDDNode) -> CUDDNode {
         //DdManager *mgr = checkSameManager(other);
         let mgr = manager.manager
         let result = Cudd_bddUnivAbstract(mgr, node, cube.node)
+        //checkReturnValue(result);
+        return CUDDNode(manager: manager, node: result!)
+    }
+    
+    public func compose(vector: [CUDDNode]) -> CUDDNode {
+        //DdManager *mgr = checkSameManager(other);
+        let mgr = manager.manager
+        var vector_: [OpaquePointer?] = vector.map({ node in node.node })
+        let result = Cudd_bddVectorCompose(mgr, node, &vector_)
         //checkReturnValue(result);
         return CUDDNode(manager: manager, node: result!)
     }

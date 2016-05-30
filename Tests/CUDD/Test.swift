@@ -62,6 +62,26 @@ class CUDDTest: XCTestCase {
         XCTAssertEqual(function.UnivAbstract(cube: a), manager.zero(), "∀ a. (a & b) == false")
     }
     
+    func testAndAbstraction() {
+        let manager = CUDDManager()
+        let a = manager.newVar()
+        let b = manager.newVar()
+        XCTAssertEqual(a.AndAbstract(with: b, cube: a & b), manager.one(), "∃ a, b. (a & b) == true")
+        XCTAssertEqual(a.AndAbstract(with: b, cube: a), b, "∃ a. (a & b) == b")
+        XCTAssertEqual(a.AndAbstract(with: b, cube: b), a, "∃ b. (a & b) == a")
+    }
+    
+    func testVectorCompose() {
+        let manager = CUDDManager()
+        let a = manager.newVar()
+        let b = manager.newVar()
+        let c = manager.newVar()
+        let d = manager.newVar()
+        let function = a & b
+        let composed = function.compose(vector: [a, c & d, c, d])
+        XCTAssertEqual(composed, a & c & d)
+    }
+    
     func testVarMapping() {
         let manager = CUDDManager()
         let a = manager.newVar()
@@ -97,14 +117,17 @@ class CUDDTest: XCTestCase {
         XCTAssertFalse(a.isPresentState())
         a.setPresentState()
         XCTAssertTrue(a.isPresentState())
+        XCTAssertFalse(b.isNextState())
         
         XCTAssertFalse(b.isNextState())
         b.setNextState()
-        XCTAssertTrue(c.isNextState())
+        XCTAssertTrue(b.isNextState())
+        XCTAssertFalse(b.isPresentState())
+        XCTAssertFalse(b.isPrimaryInput())
         
         a.setPair(nextState: b)
         
-        XCTAssertFalse(c.isPrimaryInput())
+        //XCTAssertFalse(c.isPrimaryInput())
         c.setPrimaryInput()
         XCTAssertTrue(c.isPrimaryInput())
     }
