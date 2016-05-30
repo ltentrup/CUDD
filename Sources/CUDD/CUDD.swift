@@ -43,8 +43,8 @@ public struct CUDDManager {
         assert(res == 1)
     }
     
-    public func AutodynEnable(reorderingAlgorthm: CUDDReordering) {
-        Cudd_AutodynEnable(manager, reorderingAlgorthm.cRepresentation)	
+    public func AutodynEnable(reorderingAlgorithm: CUDDReordering) {
+        Cudd_AutodynEnable(manager, reorderingAlgorithm.cRepresentation)	
     }
 }
 
@@ -110,19 +110,19 @@ public class CUDDNode: Equatable, CustomStringConvertible {
         return Int(Cudd_NodeReadIndex(node))
     }
     
-    public func setNextStep() {
+    public func setNextState() {
         Cudd_bddSetNsVar(manager.manager, self.index())
     }
     
-    public func isNextStep() -> Bool {
+    public func isNextState() -> Bool {
         return Cudd_bddIsNsVar(manager.manager, self.index()) == 1
     }
     
-    public func setPresentStep() {
+    public func setPresentState() {
         Cudd_bddSetPsVar(manager.manager, self.index())
     }
     
-    public func isPresentStep() -> Bool {
+    public func isPresentState() -> Bool {
         return Cudd_bddIsPsVar(manager.manager, self.index()) == 1
     }
     

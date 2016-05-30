@@ -94,13 +94,13 @@ class CUDDTest: XCTestCase {
         let b = manager.newVar()
         let c = manager.newVar()
         
-        XCTAssertFalse(a.isPresentStep())
-        a.setPresentStep()
-        XCTAssertTrue(a.isPresentStep())
+        XCTAssertFalse(a.isPresentState())
+        a.setPresentState()
+        XCTAssertTrue(a.isPresentState())
         
-        XCTAssertFalse(b.isNextStep())
-        b.setNextStep()
-        XCTAssertTrue(c.isNextStep())
+        XCTAssertFalse(b.isNextState())
+        b.setNextState()
+        XCTAssertTrue(c.isNextState())
         
         a.setPair(nextStep: b)
         
