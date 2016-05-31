@@ -55,7 +55,7 @@ public struct CUDDManager {
     }
 }
 
-public class CUDDNode: Equatable, CustomStringConvertible {
+public class CUDDNode: Equatable, Hashable, CustomStringConvertible {
     let manager: CUDDManager
     var node: OpaquePointer
     private init(manager: CUDDManager, node: OpaquePointer) {
@@ -69,6 +69,11 @@ public class CUDDNode: Equatable, CustomStringConvertible {
     
     public var description: String {
         return "\(self.node)"
+    }
+    
+    public var hashValue: Int {
+        let index: Int = self.index()
+        return index.hashValue
     }
     
     public func copy() -> CUDDNode {
@@ -180,6 +185,22 @@ public class CUDDNode: Equatable, CustomStringConvertible {
     
     public func setPair(nextState: CUDDNode) {
         Cudd_bddSetPairIndex(manager.manager, self.index(), nextState.index())
+    }
+    
+    public func thenChild() -> CUDDNode {
+        let result = Cudd_T(node)
+        //checkReturnValue(result);
+        return CUDDNode(manager: manager, node: result!)
+    }
+    
+    public func elseChild() -> CUDDNode {
+        let result = Cudd_E(node)
+        //checkReturnValue(result);
+        return CUDDNode(manager: manager, node: result!)
+    }
+    
+    public func isComplement() -> Bool {
+        return Cudd_IsComplement(node) == 1
     }
 }
 
