@@ -1,5 +1,5 @@
 import XCTest
-import CUDD
+@testable import CUDD
 
 class CUDDTest: XCTestCase {
     func testInitialization() {

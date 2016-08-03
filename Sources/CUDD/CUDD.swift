@@ -58,7 +58,7 @@ public struct CUDDManager {
 public class CUDDNode: Equatable, Hashable, CustomStringConvertible {
     let manager: CUDDManager
     var node: OpaquePointer
-    private init(manager: CUDDManager, node: OpaquePointer) {
+    fileprivate init(manager: CUDDManager, node: OpaquePointer) {
         self.manager = manager
         self.node = node
         Cudd_Ref(node)
@@ -202,61 +202,63 @@ public class CUDDNode: Equatable, Hashable, CustomStringConvertible {
     public func isComplement() -> Bool {
         return Cudd_IsComplement(node) == 1
     }
+    
+    // Operator declarations
+    public static func ==(lhs: CUDDNode, rhs: CUDDNode) -> Bool {
+        return lhs.node == rhs.node
+    }
+
+    public static func &(lhs: CUDDNode, rhs: CUDDNode) -> CUDDNode {
+        //DdManager *mgr = checkSameManager(other);
+        let mgr = lhs.manager.manager
+        let result = Cudd_bddAnd(mgr, lhs.node, rhs.node)
+        //checkReturnValue(result);
+        return CUDDNode(manager: lhs.manager, node: result!)
+    }
+
+    public static func &=(lhs: inout CUDDNode, rhs: CUDDNode) {
+        //DdManager *mgr = checkSameManager(other);
+        let mgr = lhs.manager.manager
+        let result = Cudd_bddAnd(mgr, lhs.node, rhs.node)
+        //checkReturnValue(result);
+        Cudd_Ref(result)
+        Cudd_RecursiveDeref(mgr, lhs.node)
+        lhs.node = result!
+    }
+
+    public static func |(lhs: CUDDNode, rhs: CUDDNode) -> CUDDNode {
+        //DdManager *mgr = checkSameManager(other);
+        let mgr = lhs.manager.manager
+        let result = Cudd_bddOr(mgr, lhs.node, rhs.node)
+        //checkReturnValue(result);
+        return CUDDNode(manager: lhs.manager, node: result!)
+    }
+
+    public prefix static func !(operand: CUDDNode) -> CUDDNode {
+        return CUDDNode(manager: operand.manager, node: Cudd_Not(operand.node))
+    }
+
+    public static func <->(lhs: CUDDNode, rhs: CUDDNode) -> CUDDNode {
+        //DdManager *mgr = checkSameManager(other);
+        let mgr = lhs.manager.manager
+        let result = Cudd_bddXnor(mgr, lhs.node, rhs.node)
+        //checkReturnValue(result);
+        return CUDDNode(manager: lhs.manager, node: result!)
+    }
+
+    public static func <=(lhs: CUDDNode, rhs: CUDDNode) -> Bool {
+        //DdManager *mgr = checkSameManager(other);
+        let mgr = lhs.manager.manager
+        let result = Cudd_bddLeq(mgr, lhs.node, rhs.node)
+        return result == 1
+    }
+
+    public static func >=(lhs: CUDDNode, rhs: CUDDNode) -> Bool {
+        //DdManager *mgr = checkSameManager(other);
+        let mgr = lhs.manager.manager
+        let result = Cudd_bddLeq(mgr, rhs.node, lhs.node)
+        return result == 1
+    }
 }
 
-public func ==(lhs: CUDDNode, rhs: CUDDNode) -> Bool {
-    return lhs.node == rhs.node
-}
-
-public func &(lhs: CUDDNode, rhs: CUDDNode) -> CUDDNode {
-    //DdManager *mgr = checkSameManager(other);
-    let mgr = lhs.manager.manager
-    let result = Cudd_bddAnd(mgr, lhs.node, rhs.node)
-    //checkReturnValue(result);
-    return CUDDNode(manager: lhs.manager, node: result!)
-}
-
-public func &=(lhs: inout CUDDNode, rhs: CUDDNode) {
-    //DdManager *mgr = checkSameManager(other);
-    let mgr = lhs.manager.manager
-    let result = Cudd_bddAnd(mgr, lhs.node, rhs.node)
-    //checkReturnValue(result);
-    Cudd_Ref(result)
-    Cudd_RecursiveDeref(mgr, lhs.node)
-    lhs.node = result!
-}
-
-public func |(lhs: CUDDNode, rhs: CUDDNode) -> CUDDNode {
-    //DdManager *mgr = checkSameManager(other);
-    let mgr = lhs.manager.manager
-    let result = Cudd_bddOr(mgr, lhs.node, rhs.node)
-    //checkReturnValue(result);
-    return CUDDNode(manager: lhs.manager, node: result!)
-}
-
-public prefix func !(operand: CUDDNode) -> CUDDNode {
-    return CUDDNode(manager: operand.manager, node: Cudd_Not(operand.node))
-}
-
-infix operator <-> {}
-public func <->(lhs: CUDDNode, rhs: CUDDNode) -> CUDDNode {
-    //DdManager *mgr = checkSameManager(other);
-    let mgr = lhs.manager.manager
-    let result = Cudd_bddXnor(mgr, lhs.node, rhs.node)
-    //checkReturnValue(result);
-    return CUDDNode(manager: lhs.manager, node: result!)
-}
-
-public func <=(lhs: CUDDNode, rhs: CUDDNode) -> Bool {
-    //DdManager *mgr = checkSameManager(other);
-    let mgr = lhs.manager.manager
-    let result = Cudd_bddLeq(mgr, lhs.node, rhs.node)
-    return result == 1
-}
-
-public func >=(lhs: CUDDNode, rhs: CUDDNode) -> Bool {
-    //DdManager *mgr = checkSameManager(other);
-    let mgr = lhs.manager.manager
-    let result = Cudd_bddLeq(mgr, rhs.node, lhs.node)
-    return result == 1
-}
+infix operator <->
