@@ -1,7 +1,7 @@
 import XCTest
 @testable import CUDD
 
-class CUDDTest: XCTestCase {
+class CUDDTests: XCTestCase {
     func testInitialization() {
         let manager = CUDDManager()
     }
@@ -159,5 +159,25 @@ class CUDDTest: XCTestCase {
         let b = manager.newVar()
         let function = a | b
         XCTAssertEqual(function.restrict(with: !b), a)
+    }
+    
+    static var allTests : [(String, (CUDDTests) -> () throws -> Void)] {
+        return [
+            ("testInitialization", testInitialization),
+            ("testOneEqual", testOneEqual),
+            ("testOneZeroUnequal", testOneZeroUnequal),
+            ("testConjunction", testConjunction),
+            ("testNegation", testNegation),
+            ("testXnor", testXnor),
+            ("testAbstraction", testAbstraction),
+            ("testAndAbstraction", testAndAbstraction),
+            ("testVectorCompose", testVectorCompose),
+            ("testVarMapping", testVarMapping),
+            ("testIndex", testIndex),
+            ("testVariableMetaInformation", testVariableMetaInformation),
+            ("testLessOrEqual", testLessOrEqual),
+            ("testCoFactor", testCoFactor),
+            ("testRestrict", testRestrict),
+        ]
     }
 }
