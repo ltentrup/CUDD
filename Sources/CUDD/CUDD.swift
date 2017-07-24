@@ -233,6 +233,16 @@ public class CUDDNode: Equatable, Hashable, CustomStringConvertible {
         //checkReturnValue(result);
         return CUDDNode(manager: lhs.manager, node: result!)
     }
+    
+    public static func |=(lhs: inout CUDDNode, rhs: CUDDNode) {
+        //DdManager *mgr = checkSameManager(other);
+        let mgr = lhs.manager.manager
+        let result = Cudd_bddOr(mgr, lhs.node, rhs.node)
+        //checkReturnValue(result);
+        Cudd_Ref(result)
+        Cudd_RecursiveDeref(mgr, lhs.node)
+        lhs.node = result!
+    }
 
     public prefix static func !(operand: CUDDNode) -> CUDDNode {
         return CUDDNode(manager: operand.manager, node: Cudd_Not(operand.node))
@@ -242,6 +252,14 @@ public class CUDDNode: Equatable, Hashable, CustomStringConvertible {
         //DdManager *mgr = checkSameManager(other);
         let mgr = lhs.manager.manager
         let result = Cudd_bddXnor(mgr, lhs.node, rhs.node)
+        //checkReturnValue(result);
+        return CUDDNode(manager: lhs.manager, node: result!)
+    }
+    
+    public static func ^(lhs: CUDDNode, rhs: CUDDNode) -> CUDDNode {
+        //DdManager *mgr = checkSameManager(other);
+        let mgr = lhs.manager.manager
+        let result = Cudd_bddXor(mgr, lhs.node, rhs.node)
         //checkReturnValue(result);
         return CUDDNode(manager: lhs.manager, node: result!)
     }
